@@ -1,0 +1,160 @@
+/* Custom styles to handle the background gradient and the flow line */
+:root {
+    --light-blue: #f3f4ff;
+    --main-gradient: linear-gradient(135deg, #e0f2fe, #f0f9ff); /* Light, subtle blue background */
+    --dark-blue: #0f172a;
+    --primary-blue-start: #3b82f6; /* Blue-500 */
+    --primary-blue-end: #0ea5e9; /* Sky-500 */
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--light-blue);
+}
+
+.process-bg {
+    background: var(--main-gradient);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    position: relative; 
+    overflow: hidden; /* Keep the circle contained within the rounded corners */
+}
+
+/* New styling for the large background circle on the left */
+.background-circle {
+    position: absolute;
+    top: 70%;
+    /* Adjusted size and position for better arc alignment */
+    left: -80px; 
+    width: 600px;
+    height: 600px; 
+    border-radius: 50%;
+    transform: translate(-50%, -50%); /* Center based on its own dimensions */
+    background: rgba(255, 255, 255, 0.7); /* White with transparency */
+    box-shadow: 0 0 100px rgba(255, 255, 255, 0.8); /* Soft inner glow */
+    border: 2px solid rgba(147, 197, 253, 0.3); /* Thin blue border */
+    z-index: 1; /* Behind the content */
+}
+
+/* Ensure content is above the background circle */
+.main-content-wrapper {
+    position: relative;
+    z-index: 10;
+}
+
+/* --- Custom Flow Line and Numbering --- */
+.flow-container {
+    position: relative;
+    min-height: 450px; /* Ensures enough height for the arc on desktop */
+    display: flex; /* Helps align content vertically */
+    align-items: center;
+}
+
+.flow-line {
+    position: absolute;
+    top: 2rem;
+    left: 2rem; /* Positioned between numbers and buttons */
+    width: 2px;
+    height: calc(100% - 4rem);
+    background-color: rgba(147, 197, 253, 0.5); /* Blue-300 transparent */
+    z-index: 10;
+}
+
+/* Arrowhead at the bottom of the line */
+.flow-line::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: -3.5px;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 8px solid rgba(147, 197, 253, 0.8);
+}
+
+.step-number {
+    z-index: 20; /* Ensure number circle is above the line */
+    color: #3b82f6; /* Blue-500 */
+}
+
+/* Gradient for the step button (Default/Completed state - Dark Blue) */
+.step-button {
+    /* Darker, more saturated gradient */
+    background: linear-gradient(90deg, #1d4ed8, #0ea5e9); 
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    border: 1px solid transparent;
+}
+    
+/* Active state for the step button (Selected state - Light Blue/White) */
+.step-button.active {
+    transition: all 0.3s ease-in-out;
+    /* Light background, gray text */
+    background: #e0f7fe; /* Very light background */
+    color: #64748b; /* Slate-500 text color */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    border: 1px solid #c0d9fa;
+}
+
+/* Ensure step number color remains visible (This may not be strictly necessary with the white circle, but kept for robustness) */
+.step-button.active + .step-number {
+    color: white; 
+}
+
+/* --- ARC LAYOUT (Desktop only) --- */
+@media (min-width: 1024px) {
+    .background-circle {
+        display: block;
+    }
+    .flow-line {
+        display: none; /* Hide vertical line for arc layout */
+    }
+    .flow-container {
+        height: 100%;
+    }
+    #process-steps {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        width: 100%;
+        align-items: flex-end; 
+        /* Shift the entire column for visual balance */
+        margin-left: 100px; 
+    }
+    
+    /* ADJUSTED: Custom transforms for a smoother, more parallel arc */
+    .step-item {
+        position: absolute;
+        left: 0;
+        transition: transform 0.4s ease;
+        width: 100%;
+        justify-content: flex-end; 
+    }
+    
+    /* Refined Arc Coordinates for better parallelism */
+    .step-item[data-step-id="quote"] { transform: translateY(-140px) translateX(30px); }
+    .step-item[data-step-id="pay-fee"] { transform: translateY(-70px) translateX(65px); }
+    .step-item[data-step-id="complete-work"] { transform: translateY(0px) translateX(80px); } /* Center point moved further right */
+    .step-item[data-step-id="rate"] { transform: translateY(70px) translateX(65px); }
+    .step-item[data-step-id="release-funds"] { transform: translateY(140px) translateX(30px); }
+
+    /* Adjust button max width for arc aesthetic */
+    .step-item .step-button {
+        max-width: 250px; 
+    }
+}
+
+@media (max-width: 1023px) {
+    .background-circle {
+        display: none; /* Hide on smaller screens */
+    }
+    .flow-line {
+        display: block; /* Show vertical line for mobile flow */
+    }
+    .flow-container {
+        min-height: auto;
+    }
+}
